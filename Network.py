@@ -17,3 +17,5 @@ class Network():
         ca.run()
         return np.mean(ca.timeseries[:, 1])
 
+if __name__ == '__main__':
+    Network(,).compute_average_contacts()
