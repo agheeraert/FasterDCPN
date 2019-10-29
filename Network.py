@@ -1,11 +1,19 @@
 import networkx as nx 
-import mdtraj as md 
+import MDAnalysis as mda
+from MDAnalysis.analysis import contacts 
 import numpy as np
 import itertools
 
-chunks = md.iterload('/home/agheerae/PDB/prot_apo_sim1_s10.dcd', chunk=100, top='/home/agheerae/PDB/prot.prmtop')
-for chunk in chunks:
-    contacts = md.compute_contacts(chunk, contacts=list(itertools.combinations(range(0, 250), r=2)))
-    print(contacts)
-            
+
+class Network():
+    def __init__(self, trajectory, topology, cutoff=5):
+        self.u = mda.Universe(trajectory,topology)
+        self.cutoff = cutoff
+    
+    def compute_average_contacts(self, cutoff=5, selection1="protein", selection2="protein"):
+        atoms_1, atoms_2 = self.u.select_atoms(selection1), universe.select_atoms(selection2)
+        ca = contacts.Contacts(self.u, selection=(selection1, selection2),
+                        refgroup=(atoms_1, atoms_2), radius=self.cutoff)
+        ca.run()
+        return np.mean(ca.timeseries[:, 1])
 
